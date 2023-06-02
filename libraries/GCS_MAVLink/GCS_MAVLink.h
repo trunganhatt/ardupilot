@@ -11,17 +11,11 @@
 
 #define MAVLINK_SEND_UART_BYTES(chan, buf, len) comm_send_buffer(chan, buf, len)
 
-#define MAVLINK_START_UART_SEND(chan, size) comm_send_lock(chan)
+#define MAVLINK_START_UART_SEND(chan, size) comm_send_lock(chan, size)
 #define MAVLINK_END_UART_SEND(chan, size) comm_send_unlock(chan)
 
-#if CONFIG_HAL_BOARD == HAL_BOARD_SITL
-// allow extra mavlink channels in SITL for:
-//    Vicon, ship
-#define MAVLINK_COMM_NUM_BUFFERS 7
-#else
 // allow five telemetry ports
 #define MAVLINK_COMM_NUM_BUFFERS 5
-#endif
 
 /*
   The MAVLink protocol code generator does its own alignment, so
@@ -34,7 +28,7 @@
 #pragma GCC diagnostic ignored "-Waddress-of-packed-member"
 #endif
 
-#include "include/mavlink/v2.0/ardupilotmega/version.h"
+#include "include/mavlink/v2.0/all/version.h"
 
 #define MAVLINK_MAX_PAYLOAD_LEN 255
 
@@ -67,10 +61,11 @@ void comm_send_buffer(mavlink_channel_t chan, const uint8_t *buf, uint8_t len);
 uint16_t comm_get_txspace(mavlink_channel_t chan);
 
 #define MAVLINK_USE_CONVENIENCE_FUNCTIONS
-#include "include/mavlink/v2.0/ardupilotmega/mavlink.h"
+#include "include/mavlink/v2.0/all/mavlink.h"
 
 // lock and unlock a channel, for multi-threaded mavlink send
-void comm_send_lock(mavlink_channel_t chan);
+void comm_send_lock(mavlink_channel_t chan, uint16_t size);
 void comm_send_unlock(mavlink_channel_t chan);
+HAL_Semaphore &comm_chan_lock(mavlink_channel_t chan);
 
 #pragma GCC diagnostic pop

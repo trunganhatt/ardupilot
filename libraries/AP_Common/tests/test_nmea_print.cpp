@@ -15,7 +15,7 @@ public:
     bool tx_pending() override { return false; };
     uint32_t available() override { return 1; };
     uint32_t txspace() override { return _txspace; };
-    int16_t read() override { return 1; };
+    bool read(uint8_t &c) override { return false; };
 
     bool discard_input() override { return true; };
     size_t write(uint8_t c) override { return 1; };
@@ -31,15 +31,12 @@ static DummyUart test_uart;
 
 TEST(NMEA, Printf)
 {
-    EXPECT_FALSE(nmea_printf(&test_uart, ""));
-    char test_string[] = "test\n";  // blabla not an NMEA string but whatever
-    const size_t len = strlen(test_string);
     // test not enought space
-    test_uart.set_txspace(len-2);
-    EXPECT_FALSE(nmea_printf(&test_uart, test_string));
+    test_uart.set_txspace(2);
+    EXPECT_FALSE(nmea_printf(&test_uart, "TEST"));
     // normal test
-    test_uart.set_txspace(42);
-    EXPECT_TRUE(nmea_printf(&test_uart, test_string));
+    test_uart.set_txspace(9);
+    EXPECT_TRUE(nmea_printf(&test_uart, "TEST"));
 }
 
 AP_GTEST_MAIN()

@@ -306,6 +306,7 @@ struct log_ROFH {
     Vector2f rawGyroRates;
     uint32_t msecFlowMeas;
     Vector3f posOffset;
+    float heightOverride;
     uint8_t rawFlowQuality;
     uint8_t _end;
 };
@@ -403,7 +404,7 @@ struct log_RBOH {
     { LOG_RGPJ_MSG, RLOG_SIZE(RGPJ),                                   \
       "RGPJ", "IffffffIiiiffHB", "TS,VX,VY,VZ,SA,Y,YA,YT,Lat,Lon,Alt,HA,VA,HD,I", "--------------#", "---------------" }, \
     { LOG_RMGH_MSG, RLOG_SIZE(RMGH),                                   \
-      "RMGH", "BBBfBBBB", "Dec,Avail,NumInst,AutoDec,NumEna,LOE,C,FUsable", "--------", "--------" },  \
+      "RMGH", "fBBBBBBB", "Dec,Avail,NumInst,AutoDec,NumEna,LOE,C,FUsable", "--------", "--------" },  \
     { LOG_RMGI_MSG, RLOG_SIZE(RMGI),                                   \
       "RMGI", "IffffffBBBB", "LU,OX,OY,OZ,FX,FY,FZ,UFY,H,HSF,I", "----------#", "-----------" },                                        \
     { LOG_RBCH_MSG, RLOG_SIZE(RBCH),                                   \
@@ -413,7 +414,7 @@ struct log_RBOH {
     { LOG_RVOH_MSG, RLOG_SIZE(RVOH),                                   \
       "RVOH", "fffIBB", "OX,OY,OZ,Del,H,Ena", "------", "------" }, \
     { LOG_ROFH_MSG, RLOG_SIZE(ROFH),                                   \
-      "ROFH", "ffffIfffB", "FX,FY,GX,GY,Tms,PX,PY,PZ,Qual", "---------", "---------" }, \
+      "ROFH", "ffffIffffB", "FX,FY,GX,GY,Tms,PX,PY,PZ,HgtOvr,Qual", "----------", "----------" }, \
     { LOG_REPH_MSG, RLOG_SIZE(REPH),                                   \
       "REPH", "fffffffffIIH", "PX,PY,PZ,Q1,Q2,Q3,Q4,PEr,AEr,TS,RT,D", "------------", "------------" }, \
     { LOG_REVH_MSG, RLOG_SIZE(REVH),                                   \

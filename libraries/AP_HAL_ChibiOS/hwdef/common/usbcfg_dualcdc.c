@@ -307,8 +307,11 @@ static const USBDescriptor *get_descriptor(USBDriver *usbp,
 uint32_t get_usb_baud(uint16_t endpoint_id)
 {
   for (uint8_t i = 0; i < ARRAY_SIZE(linecoding); i++) {
-    if(endpoint_id == ep_index[i])
-        return *((uint32_t*)linecoding[i].dwDTERate);
+      if (endpoint_id == ep_index[i]) {
+          uint32_t rate;
+          memcpy(&rate, &linecoding[i].dwDTERate[0], sizeof(rate));
+          return rate;
+      }
   }
   return 0;
 }
@@ -525,7 +528,11 @@ const USBConfig usbcfg = {
  * Serial over USB driver configuration 1.
  */
 const SerialUSBConfig serusbcfg1 = {
+#if STM32_USB_USE_OTG1
   &USBD1,
+#else
+  &USBD2,
+#endif
   USB_DATA_REQUEST_EP_A,
   USB_DATA_AVAILABLE_EP_A,
   USB_INTERRUPT_REQUEST_EP_A
@@ -535,7 +542,11 @@ const SerialUSBConfig serusbcfg1 = {
  * Serial over USB driver configuration 2.
  */
 const SerialUSBConfig serusbcfg2 = {
+#if STM32_USB_USE_OTG1
   &USBD1,
+#else
+  &USBD2,
+#endif
   USB_DATA_REQUEST_EP_B,
   USB_DATA_AVAILABLE_EP_B,
   USB_INTERRUPT_REQUEST_EP_B
